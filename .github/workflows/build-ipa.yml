@@ -1,0 +1,47 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build .app (unsigned)
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -project RemoteWatch.xcodeproj \
+            -scheme RemoteWatch \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tail -n 60
+
+      - name: Package unsigned IPA
+        run: |
+          set -e
+          mkdir Payload
+          cp -R "build/Build/Products/Release-iphoneos/RemoteWatch.app" Payload/
+          zip -qry RemoteWatch-unsigned.ipa Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RemoteWatch-unsigned-ipa
+          path: RemoteWatch-unsigned.ipa
+          retention-days: 30
