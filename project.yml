@@ -14,7 +14,7 @@ targets:
     info:
       path: RemoteWatch/Info.plist
       properties:
-             CFBundleDisplayName: 哪吒哨兵
+        CFBundleDisplayName: 哪吒哨兵
         CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         UILaunchScreen: {}
