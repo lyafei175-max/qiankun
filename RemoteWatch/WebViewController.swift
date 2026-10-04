@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 
 /// 首页加载的地址：要换站点/页面，改这一行即可
-let startURLString = "https://remote-watch.neta.rayae.icu/pages/vehicle/index"
+let startURLString = "https://remote-watch.neta.rayae.icu/"
 
 final class WebViewController: UIViewController {
 
